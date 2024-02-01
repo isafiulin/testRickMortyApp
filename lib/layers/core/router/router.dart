@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:testrickmortyapp/layers/core/router/router_path.dart';
+import 'package:testrickmortyapp/layers/core/utilits/extra_codec.dart';
 import 'package:testrickmortyapp/layers/domain/entity/character.dart';
 import 'package:testrickmortyapp/layers/presentation/character/details_page/view/character_details_page.dart';
 import 'package:testrickmortyapp/layers/presentation/character/list_page/view/character_page.dart';
@@ -12,6 +13,8 @@ final rootNavigatorKey = GlobalKey<NavigatorState>();
 /// The route configuration.
 final goRouter = GoRouter(
   initialLocation: '/',
+  extraCodec: const MyExtraCodec(),
+
   navigatorKey: rootNavigatorKey,
   //navigatorKey: GlobalKey<NavigatorState>(),
   debugLogDiagnostics: true,
