@@ -23,7 +23,7 @@ void main() {
       blocMock = CharacterBlocMock();
 
       when(() => getAllCharactersMock.call(page: any(named: 'page')))
-          .thenAnswer((_) async => [...characterList1, ...characterList2]);
+          .thenAnswer((_) async => paginatedResponseResult1NextNotNull);
     });
 
     testWidgets('renders CharacterView', (tester) async {

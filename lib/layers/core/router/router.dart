@@ -3,8 +3,11 @@ import 'package:go_router/go_router.dart';
 import 'package:testrickmortyapp/layers/core/router/router_path.dart';
 import 'package:testrickmortyapp/layers/core/utilits/extra_codec.dart';
 import 'package:testrickmortyapp/layers/domain/entity/character.dart';
+import 'package:testrickmortyapp/layers/domain/entity/episode.dart';
 import 'package:testrickmortyapp/layers/presentation/character/details_page/view/character_details_page.dart';
 import 'package:testrickmortyapp/layers/presentation/character/list_page/view/character_page.dart';
+import 'package:testrickmortyapp/layers/presentation/episode/details_page/view/episode_details_page.dart';
+import 'package:testrickmortyapp/layers/presentation/episode/list_page/view/episode_page.dart';
 import 'package:testrickmortyapp/layers/presentation/main_tab/view/main_tab_page.dart';
 import 'package:testrickmortyapp/layers/presentation/splash_page/view/splash_page.dart';
 
@@ -51,20 +54,19 @@ final goRouter = GoRouter(
           ]),
           StatefulShellBranch(routes: [
             GoRoute(
-                path: RouterPath.episodesPage,
-                builder: (context, state) => const SizedBox())
-          ]),
-          StatefulShellBranch(routes: [
-            GoRoute(
               path: RouterPath.episodesPage,
-              builder: (context, state) => const SizedBox(),
-              /*routes: [
-                        GoRoute(
-                          path: 'contactUs',
-                          builder: (context, state) =>
-                              ContactUsPage(breed: state.extra as contactUsArgument),
-                        )
-                      ]*/
+              builder: (context, state) => const EpisodePage(),
+              routes: <RouteBase>[
+                GoRoute(
+                    path: RouterPath.episodeDetailPage,
+                    builder: (BuildContext context, GoRouterState state) {
+                      final Episode episode = state.extra as Episode;
+
+                      return EpisodeDetailsPage(
+                        episode: episode,
+                      );
+                    }),
+              ],
             )
           ]),
         ])

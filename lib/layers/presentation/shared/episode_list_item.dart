@@ -1,18 +1,17 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:testrickmortyapp/layers/domain/entity/character.dart';
+import 'package:testrickmortyapp/layers/domain/entity/episode.dart';
 
-typedef OnCharacterListItemTap = void Function(Character character);
+typedef OnEpisodeListItemTap = void Function(Episode episode);
 
-class CharacterListItem extends StatelessWidget {
-  const CharacterListItem({
+class EpisodeListItem extends StatelessWidget {
+  const EpisodeListItem({
     super.key,
     required this.item,
     this.onTap,
   });
 
-  final Character item;
-  final OnCharacterListItemTap? onTap;
+  final Episode item;
+  final OnEpisodeListItemTap? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +24,6 @@ class CharacterListItem extends StatelessWidget {
           // height: 124,
           child: Row(
             children: [
-              _ItemPhoto(item: item),
               _ItemDescription(item: item),
             ],
           ),
@@ -38,7 +36,7 @@ class CharacterListItem extends StatelessWidget {
 class _ItemDescription extends StatelessWidget {
   const _ItemDescription({required this.item});
 
-  final Character item;
+  final Episode item;
 
   @override
   Widget build(BuildContext context) {
@@ -71,47 +69,20 @@ class _ItemDescription extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'Status: ${item.isAlive ? 'ALIVE' : 'DEAD'}',
+                  'Air Date: ${item.airDate}',
                   style: textTheme.labelSmall!.copyWith(
-                    color: item.isAlive ? Colors.lightGreen : Colors.redAccent,
+                    color: Colors.lightGreen,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'Last location: ${item.location?.name ?? ''}',
+                  'Episode: ${item.episode}',
                   style: textTheme.labelSmall!.copyWith(
                     color: colorScheme.onSurfaceVariant,
                   ),
                 ),
               ],
             ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _ItemPhoto extends StatelessWidget {
-  const _ItemPhoto({required this.item});
-
-  final Character item;
-
-  @override
-  Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: const BorderRadius.all(Radius.circular(12)),
-      child: SizedBox(
-        height: 122,
-        child: Hero(
-          tag: item.id!,
-          child: CachedNetworkImage(
-            height: 122,
-            width: 122,
-            imageUrl: item.image!,
-            fit: BoxFit.cover,
-            errorWidget: (ctx, url, err) => const Icon(Icons.error),
-            placeholder: (ctx, url) => const Icon(Icons.image),
           ),
         ),
       ),

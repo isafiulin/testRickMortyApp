@@ -30,7 +30,7 @@ void main() {
     test('getCharacters should return cached characters if available',
         () async {
       const page = 0;
-      final cachedCharacters = characterList1;
+      final cachedCharacters = paginatedResponseResult1NextNotNull;
       when(() => mockLocalStorage.loadPage(page: page))
           .thenReturn(cachedCharacters);
 
@@ -47,14 +47,14 @@ void main() {
         'getCharacters should fetch characters from API and save to local storage',
         () async {
       const page = 1;
-      final apiCharacters = characterList2;
-      when(() => mockLocalStorage.loadPage(page: page)).thenReturn([]);
+      final apiCharacters = paginatedResponseResult1NextNotNull;
+      when(() => mockLocalStorage.loadPage(page: page)).thenReturn(null);
       when(() => mockApi.loadCharacters(page: page))
           .thenAnswer((_) async => apiCharacters);
       when(
         () => mockLocalStorage.savePage(
           page: page,
-          list: apiCharacters,
+          data: apiCharacters,
         ),
       ).thenAnswer((_) async => true);
 
@@ -66,7 +66,7 @@ void main() {
       verify(
         () => mockLocalStorage.savePage(
           page: page,
-          list: apiCharacters,
+          data: apiCharacters,
         ),
       ).called(1);
       verifyNoMoreInteractions(mockLocalStorage);

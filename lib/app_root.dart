@@ -6,6 +6,7 @@ import 'package:testrickmortyapp/injectable.dart';
 import 'package:testrickmortyapp/layers/core/router/router.dart';
 import 'package:testrickmortyapp/layers/core/theme/theme.dart';
 import 'package:testrickmortyapp/layers/domain/usecase/get_all_characters.dart';
+import 'package:testrickmortyapp/layers/domain/usecase/get_all_episodes.dart';
 
 class AppRoot extends StatelessWidget {
   const AppRoot({super.key});
@@ -17,6 +18,7 @@ class AppRoot extends StatelessWidget {
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider.value(value: getIt<GetAllCharacters>()),
+        RepositoryProvider.value(value: getIt<GetAllEpisodes>()),
       ],
       child: MaterialApp.router(
         themeMode: ThemeMode.dark,

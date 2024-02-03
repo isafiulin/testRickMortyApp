@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:testrickmortyapp/layers/core/models/response_result.dart';
 import 'package:testrickmortyapp/layers/data/dto/episodes_dto.dart';
 import 'package:testrickmortyapp/layers/domain/repository/local_repository.dart';
 
@@ -16,27 +19,30 @@ class LocalEpisodesStorageImpl implements LocalEpisodeStorage {
   final SharedPreferences _sharedPref;
 
   @override
-  List<EpisodeDto> loadPage({required int page}) {
+  PaginatedResponseResult? loadPage({required int page}) {
     final key = getKeyToPage(page);
-    final jsonList = _sharedPref.getStringList(key);
+    final jsonString = _sharedPref.getString(key);
 
-    return jsonList != null
-        ? jsonList.map((e) => EpisodeDto.fromRawJson(e)).toList()
-        : [];
+    return jsonString != null
+        ? PaginatedResponseResult.fromJsonString(
+            json.decode(jsonString) as String)
+        : null;
   }
 
   @override
   Future<bool> savePage({
+    PaginatedResponseResult? data,
     required int page,
-    required List<dynamic> list,
   }) {
     final key = getKeyToPage(page);
 
-    if (list is List<EpisodeDto>) {
-      final jsonList = list.map((e) => e.toRawJson()).toList();
-      return _sharedPref.setStringList(key, jsonList);
+    if (data != null) {
+      if (data.result is List<EpisodeDto>) {
+        final jsonString = data.toRawJson();
+        return _sharedPref.setString(key, jsonString);
+      }
     }
-    return _sharedPref.setStringList(key, []);
+    return _sharedPref.setString(key, '');
   }
 
   @visibleForTesting

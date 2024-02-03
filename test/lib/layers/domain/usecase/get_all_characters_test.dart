@@ -2,6 +2,7 @@
 
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
+import 'package:testrickmortyapp/layers/core/models/response_result.dart';
 import 'package:testrickmortyapp/layers/domain/entity/character.dart';
 import 'package:testrickmortyapp/layers/domain/repository/character_repository.dart';
 import 'package:testrickmortyapp/layers/domain/usecase/get_all_characters.dart';
@@ -24,13 +25,15 @@ void main() {
         Character(id: 1, name: 'Rick Sanchez'),
         Character(id: 2, name: 'Morty Smith'),
       ];
+      final paginatedResponse = PaginatedResponseResult(
+          count: characters.length, next: 'nextPage', result: characters);
 
       when(() => mockCharacterRepository.getCharacters(page: page))
-          .thenAnswer((_) async => characters);
+          .thenAnswer((_) async => paginatedResponse);
 
       final result = await getAllCharacters.call(page: page);
 
-      expect(result, equals(characters));
+      expect(result, equals(paginatedResponse));
 
       verify(() => mockCharacterRepository.getCharacters(page: page)).called(1);
       verifyNoMoreInteractions(mockCharacterRepository);

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:testrickmortyapp/layers/data/dto/character_dto.dart';
+import 'package:testrickmortyapp/layers/data/dto/episodes_dto.dart';
 
 /// A codec that can serialize both [ComplexData1] and [ComplexData2].
 class MyExtraCodec extends Codec<Object?, Object?> {
@@ -24,6 +25,9 @@ class _MyExtraDecoder extends Converter<Object?, Object?> {
     if (inputAsList[0] == 'CharacterDto') {
       return CharacterDto();
     }
+    if (inputAsList[0] == 'EpisodeDto') {
+      return EpisodeDto();
+    }
 
     throw FormatException('Unable to parse input: $input');
   }
@@ -39,6 +43,8 @@ class _MyExtraEncoder extends Converter<Object?, Object?> {
     switch (input) {
       case CharacterDto _:
         return <CharacterDto>[];
+      case EpisodeDto _:
+        return <EpisodeDto>[];
       default:
         throw FormatException('Cannot encode type ${input.runtimeType}');
     }

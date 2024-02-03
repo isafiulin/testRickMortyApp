@@ -1,6 +1,9 @@
+// ignore_for_file: avoid_redundant_argument_values
+
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+
 import 'package:testrickmortyapp/layers/domain/usecase/get_all_characters.dart';
 import 'package:testrickmortyapp/layers/presentation/character/list_page/bloc/character_page_bloc.dart';
 
@@ -29,17 +32,18 @@ void main() {
         build: () => bloc,
         setUp: () {
           when(() => getAllCharacters(page: 1)).thenAnswer(
-            (_) async => characterList1,
+            (_) async => paginatedResponseResult1NextNotNull,
           );
         },
         act: (bloc) => bloc..add(const FetchNextPageEvent()),
         expect: () => [
           const CharacterPageState(
-            status: CharacterPageStatus.loading,
+            status: CharacterPageStatus.initial,
           ),
           CharacterPageState(
             status: CharacterPageStatus.success,
             characters: characterList1,
+            hasReachedEnd: false,
             currentPage: 2,
           ),
         ],
@@ -54,16 +58,17 @@ void main() {
         build: () => bloc,
         setUp: () {
           when(() => getAllCharacters(page: 1)).thenAnswer(
-            (_) async => const [],
+            (_) async => paginatedResponseResult1NextNull,
           );
         },
         skip: 1, // skip 'loading'
         act: (bloc) => bloc..add(const FetchNextPageEvent()),
         expect: () => [
-          const CharacterPageState(
+          CharacterPageState(
             status: CharacterPageStatus.success,
+            characters: characterList2,
             hasReachedEnd: true,
-            currentPage: 2,
+            currentPage: 1,
           ),
         ],
       );

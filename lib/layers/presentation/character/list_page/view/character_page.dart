@@ -6,8 +6,10 @@ import 'package:testrickmortyapp/layers/domain/entity/character.dart';
 import 'package:testrickmortyapp/layers/domain/usecase/get_all_characters.dart';
 import 'package:testrickmortyapp/layers/presentation/character/list_page/bloc/character_page_bloc.dart';
 import 'package:testrickmortyapp/layers/presentation/shared/character_list_item.dart';
-import 'package:testrickmortyapp/layers/presentation/shared/character_list_item_header.dart';
-import 'package:testrickmortyapp/layers/presentation/shared/character_list_item_loading.dart';
+import 'package:testrickmortyapp/layers/presentation/shared/list_item_header.dart';
+import 'package:testrickmortyapp/layers/presentation/widget/custom_floating_widget.dart';
+import 'package:testrickmortyapp/layers/presentation/widget/custom_progress_indicator.dart';
+import 'package:testrickmortyapp/layers/presentation/widget/item_loading.dart';
 
 class CharacterPage extends StatelessWidget {
   const CharacterPage({super.key});
@@ -46,26 +48,16 @@ class CharacterViewState extends State<CharacterView> {
     return BlocBuilder<CharacterPageBloc, CharacterPageState>(
       builder: (context, state) {
         return Scaffold(
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              _scrollController.jumpTo(0);
-            },
-            foregroundColor: Colors.black,
-            backgroundColor: Colors.green,
-            shape: const CircleBorder(),
-            child: const Icon(Icons.navigation),
-          ),
+          floatingActionButton:
+              CustomFloatingWidget(scrollController: _scrollController),
           body: Padding(
             padding: const EdgeInsets.only(left: 16, right: 16),
             child: RefreshIndicator(
               onRefresh: () async {
                 pageBloc.add(const RefreshPageEvent());
               },
-              child: state.status == CharacterPageStatus.initial ||
-                      state.status == CharacterPageStatus.loading
-                  ? const Center(
-                      child: CircularProgressIndicator(),
-                    )
+              child: state.status == CharacterPageStatus.initial
+                  ? const CustomProgressIndicator()
                   : ListView.builder(
                       key: const ValueKey('character_page_list_key'),
                       controller: _scrollController,
@@ -75,14 +67,14 @@ class CharacterViewState extends State<CharacterView> {
                       itemBuilder: (context, index) {
                         if (index >= state.characters.length) {
                           return !state.hasReachedEnd
-                              ? const CharacterListItemLoading()
+                              ? const ItemLoading()
                               : const SizedBox();
                         }
                         final item = state.characters[index];
                         return index == 0
                             ? Column(
                                 children: [
-                                  const CharacterListItemHeader(
+                                  const ListItemHeader(
                                       titleText: 'All Characters'),
                                   CharacterListItem(
                                       item: item, onTap: _goToDetails),

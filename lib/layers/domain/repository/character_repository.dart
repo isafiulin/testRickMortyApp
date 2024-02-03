@@ -1,5 +1,5 @@
-import 'package:testrickmortyapp/layers/domain/entity/character.dart';
+import 'package:testrickmortyapp/layers/core/models/response_result.dart';
 
 abstract class CharacterRepository {
-  Future<List<Character>> getCharacters({int page = 0});
+  Future<PaginatedResponseResult?> getCharacters({int page = 0});
 }

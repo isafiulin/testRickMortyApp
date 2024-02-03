@@ -1,7 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:testrickmortyapp/layers/data/dto/character_dto.dart';
+import 'package:testrickmortyapp/layers/core/models/response_result.dart';
 import 'package:testrickmortyapp/layers/domain/repository/local_repository.dart';
 
 const cachedCharacterListKey = 'CACHED_CHARACTER_LIST_PAGE';
@@ -16,27 +18,28 @@ class LocalStorageImpl implements LocalCharacterStorage {
   final SharedPreferences _sharedPref;
 
   @override
-  List<CharacterDto> loadPage({required int page}) {
+  PaginatedResponseResult? loadPage({required int page}) {
     final key = getKeyToPage(page);
-    final jsonList = _sharedPref.getStringList(key);
+    final jsonString = _sharedPref.getString(key);
 
-    return jsonList != null
-        ? jsonList.map((e) => CharacterDto.fromRawJson(e)).toList()
-        : [];
+    return jsonString != null
+        ? PaginatedResponseResult.fromJsonString(
+            json.decode(jsonString) as String)
+        : null;
   }
 
   @override
   Future<bool> savePage({
+    PaginatedResponseResult? data,
     required int page,
-    required List<dynamic> list,
   }) {
     final key = getKeyToPage(page);
 
-    if (list is List<CharacterDto>) {
-      final jsonList = list.map((e) => e.toRawJson()).toList();
-      return _sharedPref.setStringList(key, jsonList);
+    if (data != null) {
+      final jsonString = data.toRawJson();
+      return _sharedPref.setString(key, jsonString);
     }
-    return _sharedPref.setStringList(key, []);
+    return _sharedPref.setString(key, '');
   }
 
   @visibleForTesting
