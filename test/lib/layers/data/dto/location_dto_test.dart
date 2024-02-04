@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:test/test.dart';
 import 'package:testrickmortyapp/layers/data/dto/location_dto.dart';
+
+import '../../../../fixtures/fixtures.dart';
 
 void main() {
   group('LocationDto', () {
@@ -7,12 +11,9 @@ void main() {
     late LocationDto referenceDto;
 
     setUp(() {
-      referenceDto = LocationDto(
-        name: 'Rick Sanchez',
-        url: 'https://example.com/character/1',
-      );
+      referenceDto = locationDto;
 
-      referenceRawJson = referenceDto.toRawJson();
+      referenceRawJson = json.encode(locationMap);
     });
 
     test('should create LocationDto instance to/from JSON', () {

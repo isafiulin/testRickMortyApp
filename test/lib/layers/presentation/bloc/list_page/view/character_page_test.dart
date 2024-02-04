@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:testrickmortyapp/layers/presentation/character/list_page/bloc/character_page_bloc.dart';
 import 'package:testrickmortyapp/layers/presentation/character/list_page/view/character_page.dart';
-import 'package:testrickmortyapp/layers/presentation/shared/character_list_item.dart';
+import 'package:testrickmortyapp/layers/presentation/widget/component/character_list_item.dart';
 
 import '../../../../../../fixtures/fixtures.dart';
 import '../../../helper/pump_app.dart';

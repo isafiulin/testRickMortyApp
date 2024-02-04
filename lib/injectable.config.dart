@@ -11,7 +11,7 @@
 import 'package:get_it/get_it.dart' as _i1;
 import 'package:injectable/injectable.dart' as _i2;
 import 'package:shared_preferences/shared_preferences.dart' as _i8;
-import 'package:testrickmortyapp/injectable_singleton_module.dart' as _i17;
+import 'package:testrickmortyapp/injectable_singleton_module.dart' as _i18;
 import 'package:testrickmortyapp/layers/core/api/api.dart' as _i6;
 import 'package:testrickmortyapp/layers/core/api/api_consumer.dart' as _i3;
 import 'package:testrickmortyapp/layers/core/api/dio_consumer.dart' as _i4;
@@ -35,6 +35,8 @@ import 'package:testrickmortyapp/layers/domain/usecase/get_all_characters.dart'
     as _i15;
 import 'package:testrickmortyapp/layers/domain/usecase/get_all_episodes.dart'
     as _i16;
+import 'package:testrickmortyapp/layers/domain/usecase/get_characters_by_id.dart'
+    as _i17;
 
 extension GetItInjectableX on _i1.GetIt {
 // initializes the registration of main-scope dependencies inside of GetIt
@@ -75,8 +77,10 @@ extension GetItInjectableX on _i1.GetIt {
         _i15.GetAllCharacters(repository: gh<_i11.CharacterRepository>()));
     gh.lazySingleton<_i16.GetAllEpisodes>(
         () => _i16.GetAllEpisodes(repository: gh<_i13.EpisodeRepository>()));
+    gh.lazySingleton<_i17.GetCharactersByIDs>(() =>
+        _i17.GetCharactersByIDs(repository: gh<_i11.CharacterRepository>()));
     return this;
   }
 }
 
-class _$InjectionModule extends _i17.InjectionModule {}
+class _$InjectionModule extends _i18.InjectionModule {}

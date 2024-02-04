@@ -8,10 +8,12 @@ sealed class CharacterPageEvent extends Equatable {
 }
 
 final class FetchNextPageEvent extends CharacterPageEvent {
-  const FetchNextPageEvent({this.isNewSearch = false});
-  final bool? isNewSearch;
+  const FetchNextPageEvent({this.filter});
+  final CharacterFilters? filter;
 }
 
 final class RefreshPageEvent extends CharacterPageEvent {
-  const RefreshPageEvent();
+  const RefreshPageEvent({this.isNewSearch = false, this.filter});
+  final bool? isNewSearch;
+  final CharacterFilters? filter;
 }

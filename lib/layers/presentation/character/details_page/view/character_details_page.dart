@@ -9,17 +9,6 @@ class CharacterDetailsPage extends StatelessWidget {
 
   final Character character;
 
-  // static Route<void> route({required Character character}) {
-  //   return MaterialPageRoute(
-  //     builder: (context) {
-  //       return BlocProvider(
-  //         create: (_) => CharacterDetailsBloc(character: character),
-  //         child: const CharacterDetailsPage(),
-  //       );
-  //     },
-  //   );
-  // }
-
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -29,9 +18,6 @@ class CharacterDetailsPage extends StatelessWidget {
   }
 }
 
-// -----------------------------------------------------------------------------
-// View
-// -----------------------------------------------------------------------------
 class CharacterDetailsView extends StatelessWidget {
   const CharacterDetailsView({super.key});
 
@@ -47,9 +33,6 @@ class CharacterDetailsView extends StatelessWidget {
   }
 }
 
-// -----------------------------------------------------------------------------
-// Content
-// -----------------------------------------------------------------------------
 class _Content extends StatelessWidget {
   const _Content();
 
@@ -74,6 +57,8 @@ class _Content extends StatelessWidget {
                   imageUrl: character.image!,
                   fit: BoxFit.cover,
                   height: 300,
+                  errorWidget: (ctx, url, err) => const Icon(Icons.error),
+                  placeholder: (ctx, url) => const Icon(Icons.image),
                 ),
               ),
               Padding(
@@ -170,9 +155,6 @@ class _Content extends StatelessWidget {
   }
 }
 
-// -----------------------------------------------------------------------------
-// Episode
-// -----------------------------------------------------------------------------
 class EpisodeItem extends StatelessWidget {
   const EpisodeItem({super.key, required this.ep});
 

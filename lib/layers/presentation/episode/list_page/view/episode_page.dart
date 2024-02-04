@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:testrickmortyapp/layers/core/models/filters.dart';
 import 'package:testrickmortyapp/layers/core/router/router_path.dart';
 import 'package:testrickmortyapp/layers/core/utilits/common_utils.dart';
 import 'package:testrickmortyapp/layers/domain/entity/episode.dart';
 import 'package:testrickmortyapp/layers/domain/usecase/get_all_episodes.dart';
 import 'package:testrickmortyapp/layers/presentation/episode/list_page/bloc/episode_page_bloc.dart';
-import 'package:testrickmortyapp/layers/presentation/shared/episode_list_item.dart';
-import 'package:testrickmortyapp/layers/presentation/shared/list_item_header.dart';
+import 'package:testrickmortyapp/layers/presentation/widget/component/episode_list_item.dart';
+import 'package:testrickmortyapp/layers/presentation/widget/component/list_item_header.dart';
 import 'package:testrickmortyapp/layers/presentation/widget/custom_floating_widget.dart';
 import 'package:testrickmortyapp/layers/presentation/widget/custom_progress_indicator.dart';
+import 'package:testrickmortyapp/layers/presentation/widget/empty_page_widget.dart';
 import 'package:testrickmortyapp/layers/presentation/widget/item_loading.dart';
 
 class EpisodePage extends StatelessWidget {
@@ -35,6 +37,7 @@ class EpisodeView extends StatefulWidget {
 
 class EpisodeViewState extends State<EpisodeView> {
   final _scrollController = ScrollController();
+  final _textController = TextEditingController();
 
   EpisodePageBloc get pageBloc => context.read<EpisodePageBloc>();
 
@@ -58,40 +61,60 @@ class EpisodeViewState extends State<EpisodeView> {
               CustomFloatingWidget(scrollController: _scrollController),
           body: Padding(
             padding: const EdgeInsets.only(left: 16, right: 16),
-            child: state.status == EpisodePageStatus.initial
-                ? const CustomProgressIndicator()
-                : RefreshIndicator(
+            child: Column(
+              children: [
+                header(),
+                Expanded(
+                  child: RefreshIndicator(
                     onRefresh: () async {
-                      pageBloc.add(const RefreshPageEvent());
+                      refreshList();
                     },
-                    child: ListView.builder(
-                      key: const ValueKey('episode_page_list_key'),
-                      controller: _scrollController,
-                      itemCount: state.hasReachedEnd
-                          ? state.episodes.length
-                          : state.episodes.length + 1,
-                      itemBuilder: (context, index) {
-                        if (index >= state.episodes.length) {
-                          return !state.hasReachedEnd
-                              ? const ItemLoading()
-                              : const SizedBox();
-                        }
-                        final item = state.episodes[index];
-                        return index == 0
-                            ? Column(
-                                children: [
-                                  const ListItemHeader(
-                                      titleText: 'All Episodes'),
-                                  EpisodeListItem(
-                                      item: item, onTap: _goToDetails),
-                                ],
-                              )
-                            : EpisodeListItem(item: item, onTap: _goToDetails);
-                      },
-                    ),
+                    child: state.status == EpisodePageStatus.initial
+                        ? const CustomProgressIndicator()
+                        : state.episodes.isEmpty
+                            ? const EmptyListContainer()
+                            : ListView.builder(
+                                key: const ValueKey('episode_page_list_key'),
+                                controller: _scrollController,
+                                itemCount: state.hasReachedEnd
+                                    ? state.episodes.length
+                                    : state.episodes.length + 1,
+                                itemBuilder: (context, index) {
+                                  if (index >= state.episodes.length) {
+                                    return !state.hasReachedEnd
+                                        ? const ItemLoading()
+                                        : const SizedBox();
+                                  }
+                                  final item = state.episodes[index];
+                                  return EpisodeListItem(
+                                      item: item, onTap: _goToDetails);
+                                },
+                              ),
                   ),
+                ),
+              ],
+            ),
           ),
         );
+      },
+    );
+  }
+
+  void refreshList() {
+    pageBloc.add(const RefreshPageEvent());
+  }
+
+  ListItemHeader header() {
+    return ListItemHeader(
+      titleText: 'All Episodes',
+      controller: _textController,
+      onClear: () {
+        refreshList();
+      },
+      onSearch: () {
+        setState(() {});
+        pageBloc.add(RefreshPageEvent(
+            filter: EpisodeFilters(name: _textController.text.trim())));
       },
     );
   }

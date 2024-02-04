@@ -18,15 +18,19 @@ class EpisodeRepositoryImpl implements EpisodeRepository {
   @override
   Future<PaginatedResponseResult?> getEpisodes(
       {int page = 0, EpisodeFilters? filters}) async {
-    final cachedList = _localEpisodeStorage.loadPage(page: page);
+    if (filters == null) {
+      final cachedList = _localEpisodeStorage.loadPage(page: page);
 
-    if (cachedList != null) {
-      return cachedList;
+      if (cachedList != null) {
+        return cachedList;
+      }
     }
 
     final fetchedList = await _remoteEpisodeRepository.fetchEpisodes(
         page: page, filters: filters);
-    await _localEpisodeStorage.savePage(page: page, data: fetchedList);
+    if (filters == null) {
+      await _localEpisodeStorage.savePage(page: page, data: fetchedList);
+    }
     return fetchedList;
   }
 }

@@ -1,10 +1,7 @@
-import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:testrickmortyapp/layers/core/models/response_result.dart';
-import 'package:testrickmortyapp/layers/data/dto/episodes_dto.dart';
 import 'package:testrickmortyapp/layers/domain/repository/local_repository.dart';
 
 const cachedEpisodeListKey = 'CACHED_EPISODE_LIST_PAGE';
@@ -24,8 +21,7 @@ class LocalEpisodesStorageImpl implements LocalEpisodeStorage {
     final jsonString = _sharedPref.getString(key);
 
     return jsonString != null
-        ? PaginatedResponseResult.fromJsonString(
-            json.decode(jsonString) as String)
+        ? PaginatedResponseResult.fromJsonString(jsonString)
         : null;
   }
 
@@ -37,10 +33,8 @@ class LocalEpisodesStorageImpl implements LocalEpisodeStorage {
     final key = getKeyToPage(page);
 
     if (data != null) {
-      if (data.result is List<EpisodeDto>) {
-        final jsonString = data.toRawJson();
-        return _sharedPref.setString(key, jsonString);
-      }
+      final jsonString = data.toRawJson();
+      return _sharedPref.setString(key, jsonString);
     }
     return _sharedPref.setString(key, '');
   }

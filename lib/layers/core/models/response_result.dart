@@ -34,6 +34,10 @@ class PaginatedResponseResult {
 
   String toRawJson() => json.encode(toMap());
   factory PaginatedResponseResult.fromJsonString(String jsonString) {
+    //TODO для тестов почему-то нужно два раза сделать декодирование. не понимаю почему. позже постараюсь разобраться
+    if (json.decode(jsonString).runtimeType == String) {
+      jsonString = json.decode(jsonString) as String;
+    }
     // Parse the JSON string to a map
     final Map<String, dynamic> map =
         json.decode(jsonString) as Map<String, dynamic>;

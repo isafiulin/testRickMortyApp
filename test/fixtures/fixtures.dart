@@ -4,6 +4,15 @@ import 'package:testrickmortyapp/layers/core/models/response_result.dart';
 import 'package:testrickmortyapp/layers/data/dto/character_dto.dart';
 import 'package:testrickmortyapp/layers/data/dto/location_dto.dart';
 
+final locationDto = LocationDto(
+    name: 'Citadel of Ricks',
+    url: 'https://rickandmortyapi.com/api/location/3');
+
+final locationMap = {
+  'name': 'Citadel of Ricks',
+  'url': 'https://rickandmortyapi.com/api/location/3'
+};
+
 final characterDto = CharacterDto(
   id: 1,
   name: 'Rick Sanchez',
@@ -11,13 +20,43 @@ final characterDto = CharacterDto(
   species: 'Human',
   type: 'Super genius',
   gender: 'Male',
-  origin: LocationDto(name: 'Earth', url: 'https://example.com/earth'),
-  location: LocationDto(name: 'Earth', url: 'https://example.com/earth'),
-  image: 'https://example.com/rick.png',
-  episode: ['https://example.com/episode1', 'https://example.com/episode2'],
-  url: 'https://example.com/character/1',
-  created: DateTime.parse('2022-01-01T12:00:00Z'),
+  origin: LocationDto(
+      name: 'Earth', url: 'https://rickandmortyapi.com/api/location/1'),
+  location: LocationDto(
+      name: 'Citadel of Ricks',
+      url: 'https://rickandmortyapi.com/api/location/3'),
+  image: 'https://rickandmortyapi.com/api/character/avatar/1.jpeg',
+  episode: [
+    'https://rickandmortyapi.com/api/episode/1',
+    'https://rickandmortyapi.com/api/episode/2'
+  ],
+  url: 'https://rickandmortyapi.com/api/character/1',
+  created: DateTime.parse('2022-01-01T12:00Z'),
 );
+
+final characterMap = {
+  'id': 1,
+  'name': 'Rick Sanchez',
+  'status': 'Alive',
+  'species': 'Human',
+  'type': 'Super genius',
+  'gender': 'Male',
+  'origin': {
+    'name': 'Earth',
+    'url': 'https://rickandmortyapi.com/api/location/1'
+  },
+  'location': {
+    'name': 'Citadel of Ricks',
+    'url': 'https://rickandmortyapi.com/api/location/3'
+  },
+  'image': 'https://rickandmortyapi.com/api/character/avatar/1.jpeg',
+  'episode': [
+    'https://rickandmortyapi.com/api/episode/1',
+    'https://rickandmortyapi.com/api/episode/2',
+  ],
+  'url': 'https://rickandmortyapi.com/api/character/1',
+  'created': '2022-01-01T12:00:00.000Z'
+};
 
 final characterList1 = [
   CharacterDto(

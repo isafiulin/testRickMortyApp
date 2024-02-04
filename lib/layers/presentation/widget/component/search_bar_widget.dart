@@ -3,8 +3,11 @@
 import 'package:flutter/material.dart';
 
 class SearchBarWidget extends StatelessWidget {
-  const SearchBarWidget({super.key, required this.controller});
+  const SearchBarWidget(
+      {super.key, required this.controller, this.onSearch, this.onClear});
   final TextEditingController controller;
+  final Function()? onSearch;
+  final Function()? onClear;
 
   @override
   Widget build(BuildContext context) {
@@ -27,8 +30,14 @@ class SearchBarWidget extends StatelessWidget {
               Expanded(
                 child: TextField(
                   controller: controller,
+                  onSubmitted: (String value) {
+                    if (onSearch != null) {
+                      onSearch!();
+                    }
+                  },
                   decoration: const InputDecoration(
-                    hintText: 'Искать товар...',
+                    //TODO hardcode string
+                    hintText: 'Search ...',
                     hintStyle: TextStyle(
                       color: Color(0xFF727272),
                       fontFamily: 'Gilroy',
@@ -47,6 +56,9 @@ class SearchBarWidget extends StatelessWidget {
                   ? InkWell(
                       onTap: () {
                         controller.clear();
+                        if (onClear != null) {
+                          onClear!();
+                        }
                       },
                       child: const Icon(
                         Icons.close_outlined,

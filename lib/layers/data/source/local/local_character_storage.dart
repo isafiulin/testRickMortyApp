@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -23,8 +21,7 @@ class LocalStorageImpl implements LocalCharacterStorage {
     final jsonString = _sharedPref.getString(key);
 
     return jsonString != null
-        ? PaginatedResponseResult.fromJsonString(
-            json.decode(jsonString) as String)
+        ? PaginatedResponseResult.fromJsonString(jsonString)
         : null;
   }
 

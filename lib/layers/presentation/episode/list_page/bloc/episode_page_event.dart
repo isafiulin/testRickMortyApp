@@ -13,5 +13,6 @@ final class FetchNextPageEvent extends EpisodePageEvent {
 }
 
 final class RefreshPageEvent extends EpisodePageEvent {
-  const RefreshPageEvent();
+  const RefreshPageEvent({this.filter});
+  final EpisodeFilters? filter;
 }

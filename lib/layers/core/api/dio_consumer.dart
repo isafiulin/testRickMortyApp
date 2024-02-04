@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
+import 'package:testrickmortyapp/layers/core/api/dio_factory.dart';
 import '../dio_response/dio_response.dart';
 import 'api_consumer.dart';
 
@@ -12,8 +13,9 @@ class DioConsumer implements ApiConsumer {
       bool processResponse = true,
       required String url,
       required savePath}) async {
+    final Dio dio = await DioClient(baseURL: url, dio: Dio()).getDio();
     try {
-      final response = await Dio().download(url, savePath,
+      final response = await dio.download(url, savePath,
           options: Options(headers: headers),
           onReceiveProgress: progressCallback);
       final httpResponse = _buildResponse(response);
@@ -56,7 +58,9 @@ class DioConsumer implements ApiConsumer {
       bool processResponse = true,
       required String url}) async {
     try {
-      final response = await Dio().get(url,
+      final Dio dio = await DioClient(baseURL: url, dio: Dio()).getDio();
+
+      final response = await dio.get(url,
           options: Options(headers: headers), queryParameters: params);
 
       final httpResponse = _buildResponse(response);

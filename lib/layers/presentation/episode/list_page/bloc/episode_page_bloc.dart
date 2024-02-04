@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:equatable/equatable.dart';
 import 'package:stream_transform/stream_transform.dart';
+import 'package:testrickmortyapp/layers/core/models/filters.dart';
 import 'package:testrickmortyapp/layers/data/dto/episodes_dto.dart';
 import 'package:testrickmortyapp/layers/domain/entity/episode.dart';
 import 'package:testrickmortyapp/layers/domain/usecase/get_all_episodes.dart';
@@ -33,21 +35,25 @@ class EpisodePageBloc extends Bloc<EpisodePageEvent, EpisodePageState> {
   }
 
   final GetAllEpisodes _getAllEpisodes;
-  Future<void> _refreshPage(event, Emitter<EpisodePageState> emit) async {
+  Future<void> _refreshPage(
+      RefreshPageEvent event, Emitter<EpisodePageState> emit) async {
     emit(state.copyWith(status: EpisodePageStatus.initial));
+    bool hasReachedEnd = false;
 
     //TODO добавил для проверки отображения загрузки
     await Future.delayed(const Duration(seconds: 1));
     List<Episode> list = [];
 
     try {
-      final result = await _getAllEpisodes.call(page: 1);
+      final result = await _getAllEpisodes.call(page: 1, filters: event.filter);
       if (result != null) {
         list = result.result
             .map((e) => EpisodeDto.fromMap(e as Map<String, dynamic>))
             .toList();
+        hasReachedEnd = result.next == null;
       }
     } catch (e) {
+      log(e.toString());
       return emit(
         state.copyWith(
             status: EpisodePageStatus.failure,
@@ -61,7 +67,7 @@ class EpisodePageBloc extends Bloc<EpisodePageEvent, EpisodePageState> {
       state.copyWith(
           status: EpisodePageStatus.success,
           episodes: list,
-          hasReachedEnd: list.isEmpty,
+          hasReachedEnd: hasReachedEnd,
           currentPage: 2),
     );
   }
@@ -96,10 +102,12 @@ class EpisodePageBloc extends Bloc<EpisodePageEvent, EpisodePageState> {
         ),
       );
     } catch (e) {
+      log(e.toString());
+
       return emit(
         state.copyWith(
             status: EpisodePageStatus.failure,
-            episodes: list,
+            episodes: List.of(state.episodes)..addAll(list),
             hasReachedEnd: list.isEmpty,
             currentPage: 1),
       );

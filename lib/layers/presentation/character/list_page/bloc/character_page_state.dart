@@ -8,10 +8,12 @@ class CharacterPageState extends Equatable {
     this.characters = const [],
     this.hasReachedEnd = false,
     this.currentPage = 1,
+    this.filter,
   });
 
   final CharacterPageStatus status;
   final List<Character> characters;
+  final CharacterFilters? filter;
   final bool hasReachedEnd;
   final int currentPage;
 
@@ -20,12 +22,14 @@ class CharacterPageState extends Equatable {
     List<Character>? characters,
     bool? hasReachedEnd,
     int? currentPage,
+    CharacterFilters? filter,
   }) {
     return CharacterPageState(
       status: status ?? this.status,
       characters: characters ?? this.characters,
       hasReachedEnd: hasReachedEnd ?? this.hasReachedEnd,
       currentPage: currentPage ?? this.currentPage,
+      filter: filter ?? this.filter,
     );
   }
 

@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:test/test.dart';
 import 'package:testrickmortyapp/layers/data/dto/character_dto.dart';
-import 'package:testrickmortyapp/layers/data/dto/location_dto.dart';
+
+import '../../../../fixtures/fixtures.dart';
 
 void main() {
   group('CharacterDto', () {
@@ -8,25 +11,9 @@ void main() {
     late CharacterDto referenceDto;
 
     setUp(() {
-      referenceDto = CharacterDto(
-        id: 1,
-        name: 'Rick Sanchez',
-        status: 'Alive',
-        species: 'Human',
-        type: 'Super genius',
-        gender: 'Male',
-        origin: LocationDto(name: 'Earth', url: 'https://example.com/earth'),
-        location: LocationDto(name: 'Earth', url: 'https://example.com/earth'),
-        image: 'https://example.com/rick.png',
-        episode: [
-          'https://example.com/episode1',
-          'https://example.com/episode2'
-        ],
-        url: 'https://example.com/character/1',
-        created: DateTime.parse('2022-01-01T12:00:00Z'),
-      );
+      referenceDto = characterDto;
 
-      referenceRawJson = referenceDto.toRawJson();
+      referenceRawJson = json.encode(characterMap);
     });
 
     test('should create CharacterDto instance to/from JSON', () {
